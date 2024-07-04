@@ -1,0 +1,33 @@
+{% extends "home/base.html" %}
+
+{% block title %}{{ job.title }}{% endblock title %}
+
+{% block body %}
+<div class="container pt-3">
+    <div class="container text-center">
+        <p class="h3">Roadmap to become a {{ job.title }}.</p>
+    </div>
+    <div class="container pt-4">
+        {% for r in roadmap %}
+        <div class="card text-white bg-dark mb-3" style="max-width: 70rem;">
+            <div class="card-body">
+                <h5 class="card-title">{{ r.step_title }}</h5>
+                <p class="card-text">{{ r.desc }}</p>
+                <p class="card-text">Follow the links below:</p>
+                <div class="d-flex align-items-center mb-2">
+                    <a href="{{ r.article }}">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1643/1643231.png" style="height: 30px;" alt="Article Icon"/>
+                    </a>
+                    <p class="card-text mb-0 ml-2">- article</p>
+                    <div style="width: 50px;"></div>
+                    <a href="{{ r.course }}">
+                        <img src="https://cdn-icons-png.flaticon.com/512/777/777242.png" style="height: 30px;" alt="Course Icon"/>
+                    </a>
+                    <p class="card-text mb-0 ml-2">- free course</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock body %}

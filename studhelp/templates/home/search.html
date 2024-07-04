@@ -1,0 +1,59 @@
+{% extends "home\base.html" %}
+{% block title %}Search results{% endblock title %}
+
+{% block body %}
+<div class="p-3 mb-2 bg-light text-dark">
+<div class="container text-center my-5">
+    <p class="h3">Your search results:</p>
+</div>
+  {% if allPosts|length < 1 %}
+  <div class="container text-center my-5">
+    <p class="lead">Your search - <strong>{{query}}</strong> did not match any documents.<br>
+      Try different Keywords.
+    </p>
+</div>
+{% endif %}
+{% for  post  in allPosts %}
+<div class="container">
+    <div class="col-md-11">
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+          <div class="col p-4 d-flex flex-column position-static">
+            <strong class="d-inline-block mb-2 text-light-emphasis">Article by {{post.author}}</strong>
+            <h3 class="mb-0">{{post.title}}</h3>
+            <div class="mb-0 text-body-secondary">{{post.timeStamp}}</div>
+            <p class="card-text mb-auto">{{post.content | truncatechars:500}}</p>
+            <a href="/blog/{{post.slug}}" class="icon-link gap-1 icon-link-hover stretched-link">
+              Continue reading
+            </a>
+        </div>
+        </div>
+      </div>
+</div>
+{% endfor post  %}
+{% for r in allJobs %}
+<div class="container">
+  <div class="col-md-11">
+        <div class="card text-white bg-dark mb-3" style="max-width: 70rem;">
+            <div class="card-body">
+              <h5 class="card-title">This is part of {{r.job}} roadmap.</h5>
+                <h5 class="card-title">{{ r.step_title }}</h5>
+                <p class="card-text">{{ r.desc }}</p>
+                <p class="card-text">Follow the links below:</p>
+                <div class="d-flex align-items-center mb-2">
+                    <a href="{{ r.article }}">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1643/1643231.png" style="height: 30px;" alt="Article Icon"/>
+                    </a>
+                    <p class="card-text mb-0 ml-2">- article</p>
+                    <div style="width: 50px;"></div>
+                    <a href="{{ r.course }}">
+                        <img src="https://cdn-icons-png.flaticon.com/512/777/777242.png" style="height: 30px;" alt="Course Icon"/>
+                    </a>
+                    <p class="card-text mb-0 ml-2">- free course</p>
+                </div>
+            </div>
+        </div>
+      </div>
+{% endfor r %}
+</div>
+</div>
+{% endblock body %}

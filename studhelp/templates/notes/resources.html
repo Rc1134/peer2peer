@@ -1,0 +1,23 @@
+<!-- home/templates/home/resources.html -->
+{% extends "home/base.html" %}
+{% block title %}resources {% endblock title %}
+{% block body %}
+<div class="container text-center my-5">
+    <p class="h3">Find roadmaps and resources here.</p>
+  </div>
+<div class ="container">
+{% for job in alljobs%}
+<div class="row">
+    <div class="col-md-11">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{job.title}}</h5>
+          <p class="card-text">{{job.desc}}</p>
+          <a href="{% url 'roadmap_page' job.sno %}" class="btn btn-primary">Roadmap</a>
+        </div>
+      </div>
+    </div>
+<div>
+{% endfor %}
+
+{% endblock body %}

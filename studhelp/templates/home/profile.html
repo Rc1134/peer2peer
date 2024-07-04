@@ -1,0 +1,89 @@
+{% extends "home/base.html" %}
+{% block title %}Profile{% endblock title %}
+{% block body %}
+<section class="vh-100 bg-white">
+  <div class="container py-5 h-100 bg-white">
+    <div class="row d-flex justify-content-center align-items-top h-100">
+      <div class="col col-lg-6 mb-4 mb-lg-0">
+        <div class="card mb-3 bg-dark text-white"  style="border-radius: .5rem;">
+          <div class="row g-0">
+            <div class="col-md-4 gradient-custom text-center bg-dark text-white"
+              style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+              <img src="https://www.pngall.com/wp-content/uploads/5/Profile-PNG-File.png" alt="user"
+               class="img-fluid my-5" style="width: 100px;" />
+              <div class="p-2 mb-1 text-white">
+                <p class="h3 ">{{ request.user.first_name }}</p>
+                <p class="h3 ">{{ request.user.last_name }}</p>
+              </div>
+              <i class="far fa-edit mb-5"></i>
+              <!-- Display all jobs -->
+              {% for user in user_skills %}
+              <span class="badge badge-pill badge-success">{{user}}</span>
+              {% endfor %}
+            </div>
+            <div class="col-md-8">
+              <div class="card-body p-4 bg-dark text-white">
+                <h6>About</h6>
+                <hr class="mt-0 mb-4">
+                <div class="row pt-1">
+                  <div class="col-9 mb-3">
+                    <h6>Email</h6>
+                    <p class=" text-white">{{ request.user.username }}</p>
+                  </div>
+                </div>
+                <form method="post" action="{% url 'jobsearch' %}">
+                  {% csrf_token %}
+                  <div class="container align-center">
+                    <p class="lead">Enter skills:</p>
+                    <input type="text" class="form-control mb-2" id="jobs" name="jobs" placeholder="Enter your skills">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Read new posts</button>
+                  </div>
+                </form>
+
+                <!-- Display messages -->
+                {% if messages %}
+                <div class="mt-4">
+                  {% for message in messages %}
+                  <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+                    {{ message }}
+                  </div>
+                  {% endfor %}
+                </div>
+                {% endif %}
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Display skill articles -->
+        <div class="mt-4 ">
+          <div class="container text-dark my-5">
+            <p class="h3">Skill related articles:</p>
+            <p>
+        </div>
+          {% for  post  in filtered_posts %}
+<div class="container">
+    <div class="col-md-11">
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative bg-white">
+          <div class="col p-4 d-flex flex-column position-static">
+            <strong class="d-inline-block mb-2 text-light-emphasis">Article by {{post.author}}</strong>
+            <h3 class="mb-0">{{post.title}}</h3>
+            <div class="mb-0 text-body-secondary">{{post.timeStamp}}</div>
+            <p class="card-text mb-auto">{{post.content | truncatechars:500}}</p>
+            <a href="/blog/{{post.slug}}" class="icon-link gap-1 icon-link-hover stretched-link">
+              Continue reading
+            </a>
+        </div>
+        </div>
+      </div>
+</div>
+{% endfor %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

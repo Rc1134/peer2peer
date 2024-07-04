@@ -1,0 +1,50 @@
+{% extends "home\base.html" %}
+{% block title %}Contact {% endblock title %}
+{% block contactactive %}active{% endblock contactactive %}
+{% block body %}
+
+<div class="p-3 mb-2 bg-secondary text-white">
+<div class="container my-5">
+  
+    <p class="display-4">
+        Contact Us!
+      </p>
+      <form method="post" action="" >
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label" ><p class="display-5">
+            Name:
+          </p></label>
+        <textarea class="form-control" id="name" name="name" rows="1"></textarea>
+      </div>
+    
+    <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label" name="phone"><p class="display-5">
+            Phone Number:
+          </p></label>
+        <input type="phone" class="form-control" name="phone" id="phone">
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label" ><p class="display-5">
+            Email address:
+        </p></label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+    </div>
+    <div class="mb-3">
+      <label for="exampleFormControlTextarea1" class="form-label" ><p class="display-5">
+          Suggestions:
+        </p></label>
+      <textarea type="text" class="form-control" name="suggestions" id="suggestions" rows="2"></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label" ><p class="display-5">
+            Description:
+          </p></label>
+        <textarea type="text"class="form-control" name="description" id="description" rows="3"></textarea>
+      </div>
+      <button type="Submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
+
+{%endblock body%}
