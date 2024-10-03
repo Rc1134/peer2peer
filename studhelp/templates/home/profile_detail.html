@@ -1,0 +1,103 @@
+{% extends "home/base.html" %}
+{% block title %}Profile{% endblock %}
+{% block profileactive %}active{% endblock %}
+
+{% block body %}
+<section class="vh-100 bg-dark text-light" style="min-height: 100vh; background-color: #121212; overflow-x: hidden;">
+    <div class="container py-5 h-100" style="padding: 0;">
+        <div class="row no-gutters">
+            {% if user.is_authenticated %}
+            <!-- Profile Section -->
+            <div class="col-lg-4 mb-2">
+                <div class="card" style="background-color: #121212; color: #fff; border-radius: 0.5rem; width: 100%; max-width: 350px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.5)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0, 0, 0, 0.3)';">
+                    <div class="card-body text-center">
+                        
+                        {% if profile.picture %}
+            <img src="{{ profile.picture.url }}" alt="user" class="rounded-circle border border-secondary" style="width: 100px; height: 100px; margin-right: 10px; object-fit: cover;">
+          {% else %}
+            <img src="https://icons.veryicon.com/png/o/miscellaneous/rookie-official-icon-gallery/225-default-avatar.png" alt="user" class="rounded-circle" style="width: 100px; height: 100px; margin-right: 10px; object-fit: cover;">
+          {% endif %}
+                        <p class="h3">{{ request.user.first_name }} {{ request.user.last_name }}</p><br>
+                        <span class="text-light">{{ profile.bio|default:"No bio available" }}</span><br>
+                        <br>
+
+                        <div class="d-flex flex-row justify-content-center align-items-center gap-3 mb-3">
+                            {% if profile.git %}
+                            <a href="{{ profile.git }}" data-toggle="popover" data-content="GitHub profile link">
+                                <img src="https://cdn.icon-icons.com/icons2/3685/PNG/512/github_logo_icon_229278.png" style="height: 30px;" alt="GitHub Icon"/>
+                            </a>
+                            {% endif %}
+
+                            {% if profile.linkedin %}
+                            <a href="{{ profile.linkedin }}" data-toggle="popover" data-content="LinkedIn profile link">
+                                <img src="https://static.vecteezy.com/system/resources/previews/023/986/970/non_2x/linkedin-logo-linkedin-logo-transparent-linkedin-icon-transparent-free-free-png.png" style="height: 30px;" alt="LinkedIn Icon"/>
+                            </a>
+                            {% endif %}
+
+                            {% if profile.leetcode %}
+                            <a href="{{ profile.leetcode }}" data-toggle="popover" data-content="LeetCode profile link">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/LeetCode_Logo_1.png" style="height: 30px;" alt="LeetCode Icon"/>
+                            </a>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {% for skill in user_skills %}
+                            <span class="badge badge-pill badge-success">{{ skill }}</span>
+                            {% empty %}
+                            <p class="text-white">No skills added yet.</p>
+                            {% endfor %}
+                        </div>
+
+                        <h6>About</h6>
+                        <hr class="my-2">
+                        <p>Email: <span class="badge badge-pill badge-light text-dark">{{ request.user.username }}</span></p>
+                        <p>Stream: <span class="badge badge-pill badge-light text-dark">{{ account.Stream }}</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Posts Section -->
+            <div class="col-lg-8">
+                <div class="card" style="background-color: #121212; color: #fff; border-radius: 0.5rem; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);">
+                    <div class="card-body">
+                        <h4 class="mb-3">Recent Posts</h4>
+                        <ul class="list-unstyled">
+                            {% if posts %}
+                            <div class="container">
+                                <div class="row">
+                                    {% for post in posts %}
+                                    <div class="col-12 mb-4"> <!-- Each post takes up the full width of its row -->
+                                        <div class="card bg-light text-dark h-100" style="width: 100%; max-width: 100%; display: flex; flex-direction: column; transition: transform 0.3s ease, box-shadow 0.3s ease;"
+                                            onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.5)';"
+                                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                                            <div class="card-body d-flex flex-column justify-content-between">
+                                                <div>
+                                                    <h5 class="card-title" style="font-family: Tahoma, Trebuchet MS, sans-serif;">{{ post.title }}</h5>
+                                                    <h6 class="card-subtitle mb-2 text-muted" style="font-family: Tahoma, Trebuchet MS, sans-serif;">Post by {{ post.author }}</h6>
+                                                </div>
+                                                <p class="card-text" style="font-family: Tahoma, Trebuchet MS, sans-serif;">{{ post.content|truncatechars_html:100|safe }}</p>
+                                                <a href="/blog/{{ post.slug }}" class="btn btn-primary mt-auto">Continue reading</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% else %}
+                            <p class="text-light text-center" style="font-family: Tahoma, Trebuchet MS, sans-serif;">No posts available.</p>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            {% else %}
+            <p class="text-center mt-4">
+                <a href="{% url 'login_view' %}" class="btn btn-primary btn-lg">Log in to view</a>
+            </p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

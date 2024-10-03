@@ -1,59 +1,129 @@
-{% extends "home\base.html" %}
+{% extends "home/base.html" %}
 {% block title %}Search results{% endblock title %}
 
 {% block body %}
-<div class="p-3 mb-2 bg-light text-dark">
-<div class="container text-center my-5">
-    <p class="h3">Your search results:</p>
-</div>
-  {% if allPosts|length < 1 %}
+{% if user.is_authenticated %}
+<div class="p-3 mb-2 bg-dark text-light">
   <div class="container text-center my-5">
-    <p class="lead">Your search - <strong>{{query}}</strong> did not match any documents.<br>
-      Try different Keywords.
-    </p>
-</div>
-{% endif %}
-{% for  post  in allPosts %}
-<div class="container">
-    <div class="col-md-11">
-        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-          <div class="col p-4 d-flex flex-column position-static">
-            <strong class="d-inline-block mb-2 text-light-emphasis">Article by {{post.author}}</strong>
-            <h3 class="mb-0">{{post.title}}</h3>
-            <div class="mb-0 text-body-secondary">{{post.timeStamp}}</div>
-            <p class="card-text mb-auto">{{post.content | truncatechars:500}}</p>
-            <a href="/blog/{{post.slug}}" class="icon-link gap-1 icon-link-hover stretched-link">
-              Continue reading
+    <p class="h3">Your search results:</p>
+  </div>
+  {% if allPosts|length == 0 and allJobs|length == 0 and allRoadmaps|length == 0 and newJobs|length == 0 and users|length == 0 %}
+    <div class="container text-center my-5">
+      <p class="lead">Your search - <strong>{{query}}</strong> did not match any documents.<br>
+        Try different Keywords.
+      </p>
+    </div>
+  {% endif %}
+  {%if newJobs%}
+  <div id="accordion" class="accordion">
+    <div class="container text-center my-5">
+      <p class="lead">Available jobs according to your search results.</p>
+    </div>
+    {% for job in newJobs %}
+    <div class="card mb-3 bg-light text-dark border border-dark" style="max-width: 100%; height: 100%;"> <!-- Lighter card with dark border -->
+      <div class="card-header bg-light text-dark border-bottom border-dark" id="heading{{ job.sno }}">
+        <h5 class="mb-0">
+          <button class="btn btn-link text-left text-dark" data-toggle="collapse" data-target="#collapse{{ job.sno }}" aria-expanded="true" aria-controls="collapse{{ job.sno }}">
+            {{ job.jobtitle }}
+          </button>
+        </h5>
+      </div>
+      <div id="collapse{{ job.sno }}" class="collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ job.sno }}" data-parent="#accordion">
+        <div class="card-body bg-light text-dark border-top border-dark" style="height: 100%;">
+          <p><strong>Requirements:</strong> {{ job.requirements|safe }}</p>
+          <p><strong>Salary:</strong> {{ job.salary }}</p>
+          <p><strong>More details:</strong> <a href="{{ job.link }}" target="_blank" class="text-primary">{{ job.link }}</a></p>
+          <p><strong>Posted on:</strong> {{ job.timeStamp|date:"F j, Y, g:i a" }}</p>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p class="text-center text-light">No job notifications available at the moment.</p>
+    {% endfor %}
+    {%endif%}
+    {%if allPosts%}
+  </div>
+  <div id="accordion" class="accordion">
+    <div class="container text-center my-5">
+      <p class="lead">Available articles according to your search results.</p>
+    </div>
+
+  {% for post in allPosts %}
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <div class="card bg-light text-dark" style="height: 100%;">
+        <div class="card-body" style="height: 100%;">
+          <strong class="d-inline-block mb-2 text-dark-emphasis">Article by {{ post.author }}</strong>
+          <h3 class="mb-0">{{ post.title }}</h3>
+          <div class="mb-0 text-body-dark">{{ post.timeStamp }}</div>
+          <p class="card-text mb-auto">{{ post.content|truncatechars:250|safe }}</p>
+          <a href="/blog/{{ post.slug }}" class="btn btn-primary">
+            Continue reading
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {%endif%}
+  {% if allRoadmaps%}
+  <div id="accordion" class="accordion">
+    <div class="container text-center my-5">
+      <p class="lead">Available roadmaps according to your search results.</p>
+    </div>
+
+  {% for x in allRoadmaps %}
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <div class="card bg-light text-dark" style="height: 100%;">
+        <div class="card-body" style="height: 100%;">
+          <h5 class="card-title">{{ x.title }}</h5>
+          <p class="card-text">{{ x.desc }}</p>
+          <a href="{% url 'roadmap_page' x.sno %}" class="btn btn-primary">Roadmap</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {%endif%}
+
+  {%if allJobs%}
+
+  <div id="accordion" class="accordion">
+    <div class="container text-center my-5">
+      <p class="lead">Available resources according to your search results.</p>
+    </div>
+
+  {% for r in allJobs %}
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <div class="card bg-light text-dark" style="height: 100%;">
+        <div class="card-body" style="height: 100%;">
+          <h5 class="card-title">{{ r.job }}</h5>
+          <h5 class="card-title">{{ r.step_title }}</h5>
+          <p class="card-text">{{ r.desc }}</p>
+          <p class="card-text">Follow the links below:</p>
+          <div class="d-flex align-items-center mb-2">
+            <a href="{{ r.article }}">
+              <img src="https://cdn-icons-png.flaticon.com/512/1643/1643231.png" style="height: 30px;" alt="Article Icon"/>
             </a>
-        </div>
-        </div>
-      </div>
-</div>
-{% endfor post  %}
-{% for r in allJobs %}
-<div class="container">
-  <div class="col-md-11">
-        <div class="card text-white bg-dark mb-3" style="max-width: 70rem;">
-            <div class="card-body">
-              <h5 class="card-title">This is part of {{r.job}} roadmap.</h5>
-                <h5 class="card-title">{{ r.step_title }}</h5>
-                <p class="card-text">{{ r.desc }}</p>
-                <p class="card-text">Follow the links below:</p>
-                <div class="d-flex align-items-center mb-2">
-                    <a href="{{ r.article }}">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1643/1643231.png" style="height: 30px;" alt="Article Icon"/>
-                    </a>
-                    <p class="card-text mb-0 ml-2">- article</p>
-                    <div style="width: 50px;"></div>
-                    <a href="{{ r.course }}">
-                        <img src="https://cdn-icons-png.flaticon.com/512/777/777242.png" style="height: 30px;" alt="Course Icon"/>
-                    </a>
-                    <p class="card-text mb-0 ml-2">- free course</p>
-                </div>
-            </div>
+            <p class="card-text mb-0 ml-2">- article</p>
+            <div style="width: 50px;"></div>
+            <a href="{{ r.course }}">
+              <img src="https://cdn-icons-png.flaticon.com/512/777/777242.png" style="height: 30px;" alt="Course Icon"/>
+            </a>
+            <p class="card-text mb-0 ml-2">- free course</p>
+          </div>
         </div>
       </div>
-{% endfor r %}
-</div>
+    </div>
+  </div>
+  {% endfor %}
+  {%endif%}
+  {% else %}
+      <p class="text-center mt-4">
+        <a href="{% url 'login_view' %}" class="btn btn-primary btn-lg">Log in to view</a>
+      </p>
+      {% endif %}
 </div>
 {% endblock body %}

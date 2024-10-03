@@ -1,0 +1,42 @@
+{% extends "home/base.html" %}
+
+{% block title %}Job Notifications{% endblock title %}
+{% block jobactive %}active{% endblock %}
+
+{% block body %}
+<section class="pt-4 bg-dark text-light" style="min-height: 100vh;font-family: Tahoma, Trebuchet MS, sans-serif;">
+    {%if user.is_authenticated%}
+    <div class="container">
+        <h1 class="text-center mb-4 text-light">Job Notifications</h1>
+        <div id="accordion" class="accordion">
+            {% for job in jobnotif %}
+            <div class="card mb-3 bg-light text-dark border border-dark">
+                <div class="card-header bg-light text-dark border-bottom border-dark" id="heading{{ job.sno }}"> 
+                    <h5 class="mb-0">
+                        <button class="btn btn-link text-left text-dark" data-toggle="collapse" data-target="#collapse{{ job.sno }}" aria-expanded="true" aria-controls="collapse{{ job.sno }}" style="font-family: Tahoma, Trebuchet MS, sans-serif;text-decoration: none;">
+                            {{ job.jobtitle }}
+                        </button>
+                        
+                    </h5>
+                </div>
+                <div id="collapse{{ job.sno }}" class="collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ job.sno }}" data-parent="#accordion">
+                    <div class="card-body bg-light text-dark border-top border-dark"> <!-- Light body with a dark top border -->
+                        <p><strong>Requirements:</strong> {{ job.requirements|safe }}</p>
+                        <p><strong>Salary:</strong> {{ job.salary }}</p>
+                        <p><strong>More details:</strong> <a href="{{ job.link }}" target="_blank" class="text-primary">{{ job.link }}</a></p>
+                        <p><strong>Posted on:</strong> {{ job.timeStamp|date:"F j, Y, g:i a" }}</p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-light">No job notifications available at the moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+      <p class="text-center mt-4">
+        <a href="{% url 'login_view' %}" class="btn btn-primary btn-lg">Log in to view</a>
+      </p>
+      {% endif %}
+</section>
+{% endblock %}

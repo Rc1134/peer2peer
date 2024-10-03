@@ -1,30 +1,42 @@
 {% extends "home/base.html" %}
 {% block title %}Login{% endblock title %}
 {% block body %}
-<div class="container-sm my-5">
-  <h1 class="h3 mb-3 text-center">Login</h1>
-  <form method="POST" action="">
-    {% csrf_token %}
-    <div class="form-group">
-      <label for="email" class="form-label">Email Address:</label>
-      <input type="email" class="form-control" id="email2" name="email2" placeholder="Enter your email address" required autofocus>
-      <small class="form-text text-muted">We'll never share your email with anyone else.</small>
-    </div>
-    <div class="form-group">
-      <label for="password" class="form-label">Password:</label>
-      <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
-    </div>
-    <div class="form-check mb-3">
-      <input class="form-check-input" type="checkbox" value="" id="remember_me">
-      <label class="form-check-label" for="remember_me">Remember Me</label>  </div>
-    <button type="submit" class="btn btn-primary">Sign In</button>
-  </form>
-  {% if messages %}
-    <ul class="messages">
-      {% for message in messages %}
-        <li class="alert alert-{{ message.tags }}">{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
+<section class="full-height bg-dark text-light no-padding">
+<div class="container-sm bg-dark" style="min-height: 100vh; display: flex; justify-content: center; align-items: center;">
+  <div class="login-container text-dark" style="background-color: #f8f9fa; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); max-width: 400px; width: 100%;">
+    <h1 class="h3 mb-3 text-center">Login</h1>
+    <form method="POST" action="">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      
+      <div class="form-group">
+        <label for="email2" class="form-label">Email Address:</label>
+        <input type="email" class="form-control" id="email2" name="email2" placeholder="Enter your email address" required autofocus>
+        <small class="form-text text-muted">We'll never share your email with anyone else.</small>
+      </div>
+      
+      <div class="form-group">
+        <label for="password" class="form-label">Password:</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+      </div>
+      
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" value="" id="remember_me">
+        <label class="form-check-label" for="remember_me">Remember Me</label>
+      </div>
+      
+      <button type="submit" class="btn btn-primary w-100">Sign In</button>
+    </form>
+
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
 </div>
+</section>
+
 {% endblock body %}

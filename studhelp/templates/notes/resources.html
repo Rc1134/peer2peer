@@ -1,23 +1,29 @@
-<!-- home/templates/home/resources.html -->
 {% extends "home/base.html" %}
 {% block title %}resources {% endblock title %}
+{% block resourcesactive %}active{% endblock %}
 {% block body %}
-<div class="container text-center my-5">
-    <p class="h3">Find roadmaps and resources here.</p>
+<section class="bg-dark m-0 p-0">
+  <div class="container text-center text-light my-0 py-0"> 
+    <p class="fs-3">Find roadmaps and resources here</p>
   </div>
-<div class ="container">
-{% for job in alljobs%}
-<div class="row">
-    <div class="col-md-11">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">{{job.title}}</h5>
-          <p class="card-text">{{job.desc}}</p>
-          <a href="{% url 'roadmap_page' job.sno %}" class="btn btn-primary">Roadmap</a>
+  <div class="container">
+    {% for job in alljobs %}
+    <div class="row mb-3"> 
+      <div class="col-md-12">
+        <div class="card text-light" 
+     style="background-color: #121212; transition: transform 0.3s ease, box-shadow 0.3s ease;"
+     onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.5)';"
+     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+
+          <div class="card-body">
+            <h5 class="card-title">{{ job.title }}</h5>
+            <p class="card-text">{{ job.desc }}</p>
+            <a href="{% url 'roadmap_page' job.sno %}" class="btn btn-primary">Roadmap</a>
+          </div>
         </div>
       </div>
     </div>
-<div>
-{% endfor %}
-
+    {% endfor %}
+  </div>
+</section>
 {% endblock body %}

@@ -1,0 +1,15 @@
+body {
+  background-color: #ffffff;
+  color: #343a40; }
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff; }
+  .btn-primary:hover {
+    background-color: #0062cc;
+    border-color: #0062cc; }
+
+.card {
+  border-color: #6c757d; }
+
+/*# sourceMappingURL=styles.css.map */

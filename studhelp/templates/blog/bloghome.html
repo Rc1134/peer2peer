@@ -1,52 +1,127 @@
 {% extends "home/base.html" %}
 {% block title %}Blog Home{% endblock title %}
+{% block blogactive %}active{% endblock %}
 
 {% block body %}
-<div class="container">
-  <div class="my-3">
-    <p class="h3">Discuss here:</p>
-  </div>
-  <form method="post" action="">
-    {% csrf_token %}
-    {{ form.media }}
-    <div class="mb-3">
-      <label for="{{ form.title.id_for_label }}" class="form-label">
-        <p class="display-5">Title:</p>
-      </label>
-      {{ form.title }}
+<section class="pt-4 bg-dark">
+  <div class="container text-white" style="max-width: 1000px;">
+    <div class="text-center my-4">
+      <p class="h3" style="font-family: 'Courier New', Courier, monospace;">Discuss here</p>
     </div>
-    <div class="mb-3">
-      <label for="{{ form.content.id_for_label }}" class="form-label">
-        <p class="display-5">Content:</p>
-      </label>
-      {{ form.content }}
+
+    <div class="text-center mb-4">
+      <button class="btn btn-outline-success btn-lg" type="button" data-bs-toggle="collapse" data-bs-target="#postForm" aria-expanded="false" aria-controls="postForm">
+        Post
+      </button>
     </div>
-    {% if user.is_authenticated %}
-      <button class="btn btn-outline-success my-2 my-sm-0 center" type="submit">Add</button>
-    {% else %}
-      <a href="/login" class="btn btn-outline-success my-2 my-sm-2">Login to add</a>
-    {% endif %}
-  </form>
-</div>
-<div class="p-3 mb-2 bg-light text-dark">
-  <div class="container text-center my-5">
-    <p class="h3">Read latest discussions and news.</p>
-  </div>
-  {% for post in allPosts %}
-    <div class="container">
-      <div class="col-md-11">
-        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-          <div class="col p-4 d-flex flex-column position-static">
-            <strong class="d-inline-block mb-2 text-light-emphasis">Article by {{ post.author }}</strong>
-            <h3 class="mb-0">{{ post.title }}</h3>
-            <div class="mb-0 text-body-secondary">{{ post.timeStamp }}</div>
-            <!-- Display truncated post content -->
-            <p class="card-text mb-auto">{{ post.content|truncatechars_html:500|safe }}</p>
-            <a href="/blog/{{ post.slug }}" class="icon-link gap-1 icon-link-hover stretched-link">Continue reading</a>
-          </div>
+
+    <div class="collapse" id="postForm">
+      <form method="post" action="">
+        {% csrf_token %}
+        {{ form.media }}
+
+        <div class="mb-4">
+          <label for="{{ form.title.id_for_label }}" class="form-label">
+            <p class="mb-1" style="font-family: Tahoma, Trebuchet MS, sans-serif;">Title:</p>
+          </label>
+          {{ form.title }}
+          {{ form.title.errors }}
         </div>
+
+        <div class="mb-4">
+          <label for="{{ form.content.id_for_label }}" class="form-label">
+            <p class="mb-1" style="font-family: Tahoma, Trebuchet MS, sans-serif;">Content:</p>
+          </label>
+          {{ form.content }}
+          {{ form.content.errors }} 
+        </div>
+
+        {% if user.is_authenticated %}
+          <div class="text-center">
+            <button class="btn btn-outline-success btn-lg" type="submit">Add</button>
+          </div>
+        {% else %}
+          <div class="text-center">
+            <a href="/login" class="btn btn-outline-success btn-lg">Login to add</a>
+          </div>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+
+  <div class="p-3 mb-2 text-light bg-dark">
+    <div class="container text-center my-5" style="max-width: 1000px;">
+      <p class="h3">Read latest discussions and news.</p>
+    </div>
+    {% if page_obj %}
+    <div class="container">
+        <div class="row justify-content-center"> <!-- Center the cards in the row -->
+            {% for post in page_obj %}
+            <div class="col-12 mb-4 d-flex justify-content-center"> <!-- Center each card -->
+                <div class="card bg-light text-dark" style="width: 100%; max-width: 800px; display: flex; flex-direction: column; transition: transform 0.3s ease, box-shadow 0.3s ease;"
+                    onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.5)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                          <div class="d-flex align-items-center mb-2">
+                            {% if post.author.profileid.picture %}
+                              <img src="{{ post.author.profileid.picture.url }}" alt="user" class="rounded-circle border border-secondary" style="width: 50px; height: 50px; margin-right: 10px; object-fit: cover;">
+                            {% else %}
+                              <img src="https://icons.veryicon.com/png/o/miscellaneous/rookie-official-icon-gallery/225-default-avatar.png" alt="user" class="rounded-circle" style="width: 50px; height: 50px; margin-right: 10px; object-fit: cover;">
+                            {% endif %}
+                            <h6 class="d-inline-block mb-0 text-dark-muted">{{ post.author.first_name }}</h6>
+                          </div>
+                            <h5 class="card-title" style="font-family: Tahoma, Trebuchet MS, sans-serif;">{{ post.title }}</h5>
+                        </div>
+                        <p class="card-text" style="font-family: Tahoma, Trebuchet MS, sans-serif;">{{ post.content|truncatechars_html:100|safe }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                          <a href="/blog/{{ post.slug }}" class="btn btn-primary">Continue reading</a>
+                          <div class="d-flex align-items-center">
+                            <i class="fas fa-thumbs-up me-1"></i>
+                            <span class="text-dark me-3">{{ post.total_likes }} likes</span>
+                            <i class="fas fa-bookmark me-1"></i>
+                            <span class="text-dark me-3">{{ post.total_bookmarks }} bookmarks</span>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <p class="text-light text-center" style="font-family: Tahoma, Trebuchet MS, sans-serif;">No posts available.</p>
+    {% endif %}
+
+      <div class="pagination justify-content-center">
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo; First</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+              </li>
+            {% endif %}
+
+            <li class="page-item disabled">
+              <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            </li>
+
+            {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
       </div>
     </div>
-  {% endfor %}
-</div>
+  </div>
+</section>
+
 {% endblock body %}

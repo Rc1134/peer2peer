@@ -1,19 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
-# Create your models here.
-class Contact(models.Model):
-    sno=models.AutoField(primary_key=True)
-    name=models.CharField(max_length=250)
-    phone=models.CharField(max_length=13)
-    email=models.CharField(max_length=100)
-    suggestions=models.CharField(max_length=500)
-    description=models.CharField(max_length=600)
-    def __str__(self):
-        return "message from"+self.name+"-"+self.email
+from django.utils.text import slugify
+from blog.models import Post
 
 class ProfileId(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    jobs=models.CharField(max_length=100)
+    jobs = models.CharField(max_length=100,unique=True)
+    bio = models.TextField(blank=True, null=True)
+    picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    git = models.URLField(blank=True)
+    leetcode = models.URLField(blank=True)
+    linkedin = models.URLField(blank=True)
+    bookmarked_posts = models.ManyToManyField(Post, related_name='bookmarked_by')
+
     def __str__(self):
         return self.jobs
 

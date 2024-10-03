@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core.paginator import Paginator
+from home.models import ProfileId
 
 
 def blogHome(request):
@@ -35,14 +36,14 @@ def blogHome(request):
     else:
         form = PostForm()
 
-    allPosts = Post.objects.all().order_by('-timeStamp')
-    logger.info(f"Retrieved {allPosts.count()} posts")
-    context = {'allPosts': allPosts, 'form': form}
+    all_posts = Post.objects.all().order_by('-timeStamp')
+    paginator = Paginator(all_posts, 10) 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    logger.info(f"Retrieved {all_posts.count()} posts")
+
+    context = {'page_obj': page_obj, 'form': form}
     return render(request, 'blog/bloghome.html', context)
-
-
-
-
 
 def blogPost(request, slug): 
     post=Post.objects.filter(slug=slug).first()
@@ -54,8 +55,11 @@ def blogPost(request, slug):
             replyDict[reply.parent.sno]=[reply]
         else:
             replyDict[reply.parent.sno].append(reply)
+    likes_count = post.likes.count() if post.likes.exists() else 0  
+    comments_count = comments.count() if comments.exists() else 0 
+    bookmark_count=post.bookmark.count() if post.bookmark.exists() else 0
 
-    context={'post':post, 'comments': comments, 'user': request.user, 'likes_count':post.likes.count() , 'replyDict': replyDict}
+    context={'post':post, 'comments': comments, 'user': request.user, 'likes_count':likes_count ,'comments_count':comments_count,'bookmark_count':bookmark_count, 'replyDict': replyDict}
     return render(request, "blog/blogPost.html", context)
 
 def like_post(request, pk):
@@ -66,39 +70,35 @@ def like_post(request, pk):
         post.likes.add(request.user)
     return HttpResponseRedirect(reverse('blogpost', args=[post.slug]))
 
+
 def postComment(request):
     if request.method == "POST":
-        comment=request.POST.get('comment')
-        user=request.user
-        postSno =request.POST.get('postSno')
-        post= Post.objects.get(sno=postSno)
-        if comment == "":
-            messages.warning(request, "Fill comment")
+        comment_text = request.POST.get('comment')
+        user = request.user
+        postSno = request.POST.get('postSno')
+        post = Post.objects.get(sno=postSno)
+        parentSno = request.POST.get('parentSno')
+        parent = None if parentSno == "" else dcomment.objects.get(sno=parentSno)
+        image = request.FILES.get('image')  
+        file = request.FILES.get('file')
+
+        if not comment_text and not file:
+            messages.warning(request, "You must provide a comment text or upload a file.")
+            return redirect(f"/blog/{post.slug}")
+
+        new_comment = dcomment(
+            comment=comment_text,
+            user=user,
+            post=post,
+            parent=parent,
+            image=image,
+            file=file
+        )
+        new_comment.save()
+        if parent:
+            messages.success(request, "Your reply has been posted successfully")
         else:
-            parentSno= request.POST.get('parentSno')
-            if parentSno=="":
-                comment=dcomment(comment= comment, user=user, post=post)
-                comment.save()
-                messages.success(request, "Your comment has been posted successfully")
-            else:
-                parent= dcomment.objects.get(sno=parentSno)
-                comment=dcomment(comment= comment, user=user, post=post , parent=parent)
-                comment.save()
-                messages.success(request, "Your reply has been posted successfully")
+            messages.success(request, "Your comment has been posted successfully")
         
         return redirect(f"/blog/{post.slug}")
     
-
-
-def article_list(request):
-    all_posts = Post.objects.all()
-
-    paginator = Paginator(all_posts, 10) 
-
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    return render(request, 'blog/bloghome.html', {'page_obj': page_obj})
-
-
-

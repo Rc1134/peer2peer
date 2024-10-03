@@ -25,12 +25,13 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.title, name="title"),
-    path('home/', views.home, name="home"),
-    path('profile/', views.profile, name="profile"),
+    path('homepage/', views.home, name="home"),
     path('contactus/', views.contactus, name="contactus"),
     path('blog/' , include('blog.urls')),
     path('',include('home.urls')),
     path('',include('notes.urls')),
+    path('',include('notifications.urls')),
+    path('',include('start.urls')),
     path('ckeditor/',include('ckeditor_uploader.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

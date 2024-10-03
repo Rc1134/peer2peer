@@ -1,0 +1,112 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% block title %}StudHelp{% endblock %}
+{% block homeactive %}active{% endblock %}
+{% block body %}
+<section class="full-height bg-dark text-light no-padding">
+  <div class="container py-4 bg-dark">
+    <div class="bg-dark text-white rounded p-4 mb-4">
+      <main role="main">
+        <section class="jumbotron jumbotron-fluid text-white rounded" style="background-color: #111213;">
+          <div class="container text-center">
+            <h1 class="display-4">Peer-2-Peer</h1>
+            <p class="lead text-center" style=" font-family: 'Courier New', Courier, monospace;
+}">Our platform supports collaboration and communication among college students by providing career roadmaps and free courses. Discover useful resources and connect with peers to enhance your academic and professional journey.</p>
+
+            {% if user.is_authenticated %}
+            <p>
+              <a href="{% url 'blogHome' %}" class="btn btn-primary btn-lg">Read</a>
+            </p>
+            {% else %}
+            <p>
+              <a href="{% url 'login_view' %}" class="btn btn-primary btn-lg">Log in</a>
+            </p>
+            {% endif %}
+          </div>
+        </section>
+        <div class="container text-center mb-4">
+          <p class="h3" style="font-family: Tahoma, Trebuchet MS, sans-serif;">Find new jobs notifications</p>
+        </div>
+      </div>
+        {% if newjobs %}
+        <div class="container bg-dark text-light" style=" font-family: Tahoma, Trebuchet MS, sans-serif;">
+          <div class="row">
+            {% for new in newjobs %}
+            <div class="col-md-4 mb-4">
+              <div class="card bg-light text-dark h-100" style="transition: transform 0.3s ease, box-shadow 0.3s ease;"
+              onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.5)';"
+              onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                <div class="card-body">
+                  <h5 class="card-title" >{{ new.jobtitle }}</h5>
+                  <p class="card-text">{{ new.requirements|truncatechars_html:150|safe }}</p>
+                  <a href="/jobnotifications" class="btn btn-primary">Find</a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% else %}
+          <p class="text-light text-center" style="font-family: Tahoma, Trebuchet MS, sans-serif;">No posts available.</p>
+        {% endif %}
+
+
+        <div class="container text-center mb-4">
+          <p class="h3" style="font-family: Tahoma, Trebuchet MS, sans-serif;">Read latest popular discussions</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul class="list-unstyled">
+            {% if allPosts %}
+            <div class="container">
+                <div class="row">
+                    {% for post in allPosts %}
+                    <div class="col-md-4 mb-4">
+                      <div class="card bg-light text-dark h-100" style="transition: transform 0.3s ease, box-shadow 0.3s ease;"
+                      onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.5)';"
+                      onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                        <div class="card-body">
+                          <h5 class="card-title" style="font-family: Tahoma, Trebuchet MS, sans-serif;">{{ post.title }}</h5>
+                          <p class="card-text" style="font-family: Tahoma, Trebuchet MS, sans-serif;">{{ post.content|truncatechars_html:100|safe }}</p>
+                          <a href="/blog/{{ post.slug }}" class="btn btn-primary">Continue reading</a>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
+            <p class="text-light text-center" style="font-family: Tahoma, Trebuchet MS, sans-serif;">No posts available.</p>
+            {% endif %}
+        </ul>
+    </div>
+
+        <div class="container text-center mb-4" style="font-family: Tahoma, Trebuchet MS, sans-serif;">
+          <p class="h3">Find new popular roadmaps</p>
+        </div>
+
+        {% if allJobs %}
+        <div class="container bg-dark text-light">
+          <div class="row">
+            {% for job in allJobs %}
+            <div class="col-md-4 mb-4">
+              <div class="card bg-light text-dark h-100" style="transition: transform 0.3s ease, box-shadow 0.3s ease;"
+              onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.5)';"
+              onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                <div class="card-body">
+                  <h5 class="card-title" style="font-family: Tahoma, Trebuchet MS, sans-serif;">{{ job.title }}</h5>
+                  <p class="card-text" style="font-family: Tahoma, Trebuchet MS, sans-serif;">{{ job.desc|truncatechars_html:150|safe }}</p>
+                  <a href="/jobnotes/{{ job.sno }}" class="btn btn-primary">Continue reading</a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% else %}
+          <p class="text-light text-center">No jobs available.</p>
+        {% endif %}
+      </main>
+  </div>
+</section>
+{% endblock %}

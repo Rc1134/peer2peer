@@ -1,0 +1,64 @@
+// Import Bootstrap variables and mixins
+@import '../node_modules/bootstrap/scss/functions';
+@import '../node_modules/bootstrap/scss/variables';
+@import '../node_modules/bootstrap/scss/mixins';
+
+// Your custom color variables
+$colors: (
+  "blue": #5d06c7,
+  "indigo": #6610f2,
+  "purple": #55ff00,
+  "pink": #e83e8c,
+  "red": #dc3545,
+  "orange": #fd7e14,
+  "yellow": #ffc107,
+  "green": #28a745,
+  "teal": #20c997,
+  "cyan": #17a2b8,
+  "white": #ffffff,
+  "gray": #6c757d,
+  "gray-dark": #343a40
+);
+
+// Override Bootstrap colors with custom colors
+$primary: map-get($colors, 'blue');
+$secondary: map-get($colors, 'indigo');
+$success: map-get($colors, 'green');
+$info: map-get($colors, 'cyan');
+$warning: map-get($colors, 'yellow');
+$danger: map-get($colors, 'red');
+$light: map-get($colors, 'white');
+$dark: map-get($colors, 'gray-dark');
+
+// Custom styles
+body {
+  background-color: map-get($colors, 'gray-light');
+}
+
+.jumbotron {
+  background-color: map-get($colors, 'indigo');
+  color: map-get($colors, 'white');
+}
+
+.card {
+  border: 1px solid map-get($colors, 'gray');
+}
+
+.card-body {
+  background-color: map-get($colors, 'white');
+}
+
+.btn-primary {
+  background-color: map-get($colors, 'blue');
+  border-color: map-get($colors, 'blue');
+}
+
+.btn-outline-secondary {
+  color: map-get($colors, 'gray-dark');
+  border-color: map-get($colors, 'gray-dark');
+
+  &:hover {
+    background-color: map-get($colors, 'gray-dark');
+    color: map-get($colors, 'white');
+  }
+}

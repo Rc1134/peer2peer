@@ -4,30 +4,57 @@
 
 {% block body %}
 <div class="container pt-3">
-    <div class="container text-center">
-        <p class="h3">Roadmap to become a {{ job.title }}.</p>
+    <div class="text-center">
+        <p class="h3">Roadmap for {{ job.title }}.</p>
     </div>
-    <div class="container pt-4">
-        {% for r in roadmap %}
-        <div class="card text-white bg-dark mb-3" style="max-width: 70rem;">
-            <div class="card-body">
-                <h5 class="card-title">{{ r.step_title }}</h5>
-                <p class="card-text">{{ r.desc }}</p>
-                <p class="card-text">Follow the links below:</p>
-                <div class="d-flex align-items-center mb-2">
-                    <a href="{{ r.article }}">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1643/1643231.png" style="height: 30px;" alt="Article Icon"/>
-                    </a>
-                    <p class="card-text mb-0 ml-2">- article</p>
-                    <div style="width: 50px;"></div>
-                    <a href="{{ r.course }}">
-                        <img src="https://cdn-icons-png.flaticon.com/512/777/777242.png" style="height: 30px;" alt="Course Icon"/>
-                    </a>
-                    <p class="card-text mb-0 ml-2">- free course</p>
+
+    <div class="container">
+        <div class="d-flex justify-content-center align-items-center">
+            {% if user.is_authenticated %}
+                <div class="d-flex flex-column align-items-center">
+                    <form action="{% url 'like_roadmap' job.pk %}" method="POST" class="mb-3">
+                        {% csrf_token %}
+                        <button type="submit" name="job_id" value="{{ job.sno }}" class="btn btn-dark btn-sm">
+                            <i class="fas fa-arrow-up"></i> <!-- Arrow Up Icon -->
+                        </button>
+                        <button type="button" class="btn btn-dark-outline btn-sm">
+                            <span class="badge badge-dark">{{ likes_count }} Upvotes</span>
+                        </button>
+                    </form>
+
+                    <div class="pt-4">
+                        <div class="row">
+                            {% for r in roadmap %}
+                                <div class="col-md-12 mb-3">
+                                    <div class="card text-white" style="width: 100%;background-color: #121212;">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ r.step_title }}</h5>
+                                            <p class="card-text">{{ r.desc|truncatechars:300}}</p>
+                                            <p class="card-text">Follow the links below:</p>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <a href="{{ r.article }}" class="mr-2">
+                                                    <img src="https://cdn-icons-png.flaticon.com/512/1643/1643231.png" style="height: 30px;" alt="Article Icon"/>
+                                                </a>
+                                                <p class="card-text mb-0 mr-4">- article</p>
+                                                <a href="{{ r.course }}">
+                                                    <img src="https://cdn-icons-png.flaticon.com/512/777/777242.png" style="height: 30px;" alt="Course Icon"/>
+                                                </a>
+                                                <p class="card-text mb-0 ml-2">- free course</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
-            </div>
+            {% else %}
+                <!-- Login Prompt for Unauthenticated Users -->
+                <p class="text-center mt-4">
+                    <a href="{% url 'login_view' %}" class="btn btn-primary btn-lg">Log in to view</a>
+                </p>
+            {% endif %}
         </div>
-        {% endfor %}
     </div>
 </div>
 {% endblock body %}
