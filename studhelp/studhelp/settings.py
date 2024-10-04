@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z(v&jem1pckhq$pd-@5e$ryh-($$sk2v9w+$4jc-s@vx9ys(s!'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://ram1134.pythonanywhere.com/']  # Replace with your actual domain
 
 
 INSTALLED_APPS = [
@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'notes.apps.NotesConfig',
     'notifications.apps.NotificationsConfig',
     'start.apps.StartConfig'
-
 ]
 
 MIDDLEWARE = [
@@ -123,45 +122,36 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
-import os
-
-# Other settings...
 
 STATIC_URL = '/static/'
 
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-ASS_PROCESSOR_ENABLED = True
+SASS_PROCESSOR_ENABLED = True
 SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static/sass')
 SASS_PROCESSOR_INCLUDE_DIRS = [os.path.join(BASE_DIR, 'node_modules')]
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-# settings.py
-
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MESSAGE_TAGS= {
-    messages.ERROR:'alert-danger'
+MESSAGE_TAGS = {
+    messages.ERROR: 'alert-danger'
 }
-import os
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_CONFIGS = {
-    'default' : {
-        'toolbar' : 'full',
-        'height' : 300,
-        'width' : 'auto',
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': 'auto',
     },
 }
 
@@ -172,7 +162,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': 'debug.log',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),  # Ensure this is in the BASE_DIR
         },
     },
     'loggers': {
@@ -183,12 +173,11 @@ LOGGING = {
         },
     },
 }
-# settings.py
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'mr.rc11348@gmail.com'
-EMAIL_HOST_PASSWORD = 'Ram@1134'  # For security, store this in environment variables.
-DEFAULT_FROM_EMAIL = 'mr.rc11348@gmail.com'
-
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'your_email@gmail.com')  # Use env variables
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'your_password')  # Use env variables
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'your_email@gmail.com')  # Use env variables
