@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from ckeditor.fields import RichTextField
 
 class Jobs(models.Model):
     sno = models.AutoField(primary_key=True)
