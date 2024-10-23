@@ -50,3 +50,12 @@ It enables students to share resources, participate in discussions, and prepare 
    ```
 
 7. Open the app in your browser at `http://127.0.0.1:8000/`.
+
+## Home page
+![Screenshot (143)](https://github.com/user-attachments/assets/84ea75fc-ee49-4dad-a4ef-ea347388eae2)
+## Roadmap Page
+![Screenshot (143)](https://github.com/user-attachments/assets/9a844047-a913-4ffb-9bcb-2fe68efd2698)
+## job notifications page
+![Screenshot (145)](https://github.com/user-attachments/assets/6cf0dcc9-39e6-4e68-a2ef-f5929de11de3)
+
+
